@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 void main() {
   //creer la fonction main qui va appeler la fonction CalculatriceApp()
@@ -50,8 +51,20 @@ class _CalculatriceEcranState extends State<CalculatriceEcran> {
         }
       }
       else if(TextBouton=="="){
+     String expression=equation;
+     expression= expression.replaceAll("÷", "/");
+      try{
+        Parser p=Parser();
+        Expression exp=p.parse(expression);
+        ContextModel cm=ContextModel();
+        resultat="${exp.evaluate(EvaluationType.REAL, cm)}";
 
+      }catch(e){
 
+        resultat="Erreur de syntaxe";
+        print(e);
+
+      }
 
 
       }else{
