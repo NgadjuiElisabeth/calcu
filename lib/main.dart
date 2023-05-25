@@ -1,11 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'dart:math';
 
 void main() {
   //creer la fonction main qui va appeler la fonction CalculatriceApp()
-
+  Supabase.initialize(
+    url: 'https://ptundmtrsdaxtqetgbsk.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0dW5kbXRyc2RheHRxZXRnYnNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODQyNTMxODgsImV4cCI6MTk5OTgyOTE4OH0.0o4wa3-r7gZoFb6DYywUQ3IoEEtBvGbmdjR8ftq-FEA',
+  );
+  sendDataToSupabase("2+50","52");
   runApp(CalculatriceAPP());
 }
+
+
+void sendDataToSupabase(String calcul,String result) async {
+  final supabase = Supabase.instance.client;
+  Random random = Random();
+  int id = random.nextInt(100000);
+  // Données à envoyer
+  Map<String, dynamic> data = {
+    'id': id,
+    'calcul': calcul,
+    'result': result,
+  };
+
+  // Table dans laquelle les données seront insérées
+  String tableName = 'history';
+  final response = await supabase.from(tableName).insert([data]).execute();
+}
+
+
 //CalculatriceApp() pour fonctionner necessite un widget
 //(stlesswidget de la fonction calculatriceApp) d'abord
 class CalculatriceAPP extends StatelessWidget {
