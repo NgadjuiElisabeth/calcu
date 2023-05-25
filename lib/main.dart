@@ -53,9 +53,20 @@ class _CalculatriceEcranState extends State<CalculatriceEcran> {
       else if(TextBouton=="="){
      String expression=equation;
      expression= expression.replaceAll("÷", "/");
+     bool isPourcent = false;
+     if(expression.contains('%')) {
+       expression = expression.replaceAll('%', "/100*");
+       isPourcent = true;
+     }
+     expression = expression.replaceAll(',',".");
+     if(expression.endsWith('*') && isPourcent){
+       expression = expression + "1";
+     }
+     print(expression);
       try{
         Parser p=Parser();
         Expression exp=p.parse(expression);
+
         ContextModel cm=ContextModel();
         resultat="${exp.evaluate(EvaluationType.REAL, cm)}";
 
@@ -63,14 +74,17 @@ class _CalculatriceEcranState extends State<CalculatriceEcran> {
 
         resultat="Erreur de syntaxe";
         print(e);
-
       }
 
 
       }else{
-        if(equation=="0"){
+        if(equation=="0" && TextBouton == "0"){
+          equation="0";
+        }
+        else if(equation=="0" && isNumeric(TextBouton)){
           equation=TextBouton;
-        }else{
+        }
+        else{
           equation=equation+TextBouton;
         }
       }
@@ -78,9 +92,13 @@ class _CalculatriceEcranState extends State<CalculatriceEcran> {
 
     });
   }
-
-
-
+  // pour verifier si une chaine est numerique ou non  source -> https://stackoverflow.com/questions/24085385/checking-if-string-is-numeric-in-dart
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
+  }
   Widget calculatriceButton(String textBouton,Color couleurText,Color couleurBouton){
     return Container(
       height: MediaQuery.of(context).size.height*0.1,
