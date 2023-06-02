@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 
+//page authentification
+// page historique + se connecter a superbase
+// ajouter fonctionnalite ( convertisseur, mode scientifique (cos mod etc) )
+//
+
 void main() {
   //creer la fonction main qui va appeler la fonction CalculatriceApp()
 
@@ -51,38 +56,50 @@ class _CalculatriceEcranState extends State<CalculatriceEcran> {
         }
       }
       else if(TextBouton=="="){
-     String expression=equation;
-     expression= expression.replaceAll("÷", "/");
-     bool isPourcent = false;
-     if(expression.contains('%')) {
-       expression = expression.replaceAll('%', "/100*");
-       isPourcent = true;
-     }
-     expression = expression.replaceAll(',',".");
-     if(expression.endsWith('*') && isPourcent){
-       expression = expression + "1";
-     }
-     print(expression);
-      try{
-        Parser p=Parser();
-        Expression exp=p.parse(expression);
+       String expression=equation;
+       expression= expression.replaceAll("÷", "/");
+       bool isPourcent = false;
+       if(expression.contains('%')) {
+         expression = expression.replaceAll('%', "/100*");
+         isPourcent = true;
+       }
+       expression = expression.replaceAll(',',".");
+       expression = expression.replaceAll('R',resultat);
+       if(expression.endsWith('*') && isPourcent){
+         expression = expression + "1";
+       }
+       print(expression);
+        try{
+          Parser p=Parser();
+          Expression exp=p.parse(expression);
 
-        ContextModel cm=ContextModel();
-        resultat="${exp.evaluate(EvaluationType.REAL, cm)}";
+          ContextModel cm=ContextModel();
+          resultat="${exp.evaluate(EvaluationType.REAL, cm)}";
 
-      }catch(e){
+        }catch(e){
 
-        resultat="Erreur de syntaxe";
-        print(e);
+          resultat="Erreur de syntaxe";
+          print(e);
+        }
+       equation = "0";
       }
-
-
-      }else{
+      else{
         if(equation=="0" && TextBouton == "0"){
           equation="0";
         }
-        else if(equation=="0" && isNumeric(TextBouton)){
+        else if(equation=="0" && (isNumeric(TextBouton) || TextBouton =="R")){
           equation=TextBouton;
+
+        }
+        else if (equation == "0" && resultat != "0" && !isNumeric(TextBouton) && equation.length <2){
+          //print("on est la");
+          if(TextBouton !=",") {
+            equation = equation + TextBouton;
+            equation = equation.replaceAll('0', resultat);
+          }
+          else{
+            equation = "0,";
+          }
         }
         else{
           equation=equation+TextBouton;
@@ -168,7 +185,7 @@ class _CalculatriceEcranState extends State<CalculatriceEcran> {
                       ),
                       TableRow(
                           children: [
-                            calculatriceButton("⟲", Colors.black, Colors.white),
+                            calculatriceButton("R", Colors.black, Colors.white),
                             calculatriceButton("0", Colors.black, Colors.white),
                             calculatriceButton(",", Colors.black, Colors.white),
                             calculatriceButton("=", Colors.blue, Colors.white),
