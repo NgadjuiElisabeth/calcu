@@ -29,7 +29,6 @@ Future<List<Map<String, dynamic>>> getDataToSupabase() async {
       extractedData.add(extractedValues);
     }
     return extractedData;
-
 }
 
 //c'est la fonction pour envoyer les données dans la supabase
@@ -37,7 +36,6 @@ void sendDataToSupabase(String calcul,String result) async {
   final supabase = Supabase.instance.client;
   Random random = Random();
   int id = random.nextInt(100000);
-  print(id);
   // Données à envoyer
   Map<String, dynamic> data = {
     'id': id,
@@ -47,7 +45,6 @@ void sendDataToSupabase(String calcul,String result) async {
 
   // Table dans laquelle les données seront insérées
   String tableName = 'history';
-  print("la");
   final response = await supabase.from(tableName).insert([data]).execute();
 }
 
@@ -104,6 +101,7 @@ class _CalculatriceEcranState extends State<CalculatriceEcran> {
         Expression exp=p.parse(expression);
         ContextModel cm=ContextModel();
         resultat="${exp.evaluate(EvaluationType.REAL, cm)}";
+        sendDataToSupabase(equation,resultat);
 
       }catch(e){
 
