@@ -1,5 +1,7 @@
+import 'package:calcu/Calculatrice/CalculariceHistorique.dart';
 import 'package:flutter/material.dart';
 import 'package:calcu/Calculatrice/CalculatricePage.dart';
+
 
 void main() {
   //creer la fonction main qui va appeler la fonction CalculatriceApp()
@@ -14,6 +16,10 @@ class CalculatriceAPP extends StatelessWidget {
       title: "Calculatrice",
       theme: ThemeData(primaryColor: Colors.blue),
       home: CalculatriceEcran(),
+      routes: {
+        '/Accueil': (context) => CalculatriceEcran(),
+        '/Historique' :(context) => HistoriqueCalcu(),
+      },
     );
   }
 

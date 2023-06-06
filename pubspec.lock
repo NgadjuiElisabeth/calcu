@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  dropdown:
+    dependency: "direct main"
+    description:
+      name: dropdown
+      sha256: "3056f79dfceed3ca7977c2e1d095a0eeb337500c06edffc8783ecfed792c7ab8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   fake_async:
     dependency: transitive
     description:
@@ -123,6 +131,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.0"
+  navigator:
+    dependency: "direct main"
+    description:
+      name: navigator
+      sha256: fdbeb63fa4c0a05801f16d091c7e8e8348b1d730aa0afe46ab42c5cf1e6d1069
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   path:
     dependency: transitive
     description:
@@ -194,3 +210,4 @@ packages:
     version: "2.1.4"
 sdks:
   dart: ">=2.19.3 <3.0.0"
+  flutter: ">=1.17.0"

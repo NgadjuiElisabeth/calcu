@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/navigator.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:calcu/Calculatrice/Calculatrice_Fonction_BoutonPresse.dart';
 
@@ -13,6 +14,8 @@ class _CalculatriceEcranState extends State<CalculatriceEcran> {
   String equation = "0";
   String resultat = "0";
   String operateur = "0";
+  String selectedPage = 'Accueil';
+  List<String> pages = ['Accueil', 'Historique'];
 
   void boutonPresse(String TextBouton) {
     setState(() {
@@ -63,7 +66,6 @@ class _CalculatriceEcranState extends State<CalculatriceEcran> {
 
         }
         else if (equation == "0" && resultat != "0" && !isNumeric(TextBouton) && equation.length <2){
-          //print("on est la");
           if(TextBouton !=",") {
             equation = equation + TextBouton;
             equation = equation.replaceAll('0', resultat);
@@ -86,11 +88,23 @@ class _CalculatriceEcranState extends State<CalculatriceEcran> {
     }
     return double.tryParse(s) != null;
   }
+    // fonction pour naviguer entre page
+  void navigateToPage(String page) {
+    setState(() {
+      selectedPage = page;
+    });
+    //pour naviguer
+    if (page == 'Accueil') {
+      Navigator.pushReplacementNamed(context, '/Accueil');
+    } else if (page == 'Historique') {
+      Navigator.pushReplacementNamed(context, '/Historique');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Calculatrice"),
+        title: Text("Calculatrice_Accueil"),
         centerTitle: true,
       ),
       body: Column(
@@ -227,11 +241,21 @@ class _CalculatriceEcranState extends State<CalculatriceEcran> {
                     ),
                     TableRow(
                       children: [
-                        calcuButtonPresse(
-                          textBouton: "⟲",
-                          couleurText: Colors.black,
-                          couleurBouton: Colors.white,
-                          onPressed: boutonPresse,
+                        Container(
+                          width: 10,
+                          alignment: Alignment.center,
+                          child: DropdownButton<String>(
+                            value: selectedPage,
+                            items: pages.map((String page) {
+                              return DropdownMenuItem<String>(
+                                value: page,
+                                child: Text(page),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              navigateToPage(value as String);
+                            },
+                          ),
                         ),
                         calcuButtonPresse(
                           textBouton: "0",
