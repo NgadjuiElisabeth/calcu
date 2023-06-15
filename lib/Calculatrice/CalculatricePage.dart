@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/navigator.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:calcu/Calculatrice/Calculatrice_Fonction_BoutonPresse.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'dart:math';
 
 class CalculatriceEcran extends StatefulWidget {
   const CalculatriceEcran({Key? key}) : super(key: key);
+
 
   @override
   State<CalculatriceEcran> createState() => _CalculatriceEcranState();
@@ -16,6 +19,23 @@ class _CalculatriceEcranState extends State<CalculatriceEcran> {
   String operateur = "0";
   String selectedPage = 'Accueil';
   List<String> pages = ['Accueil', 'Historique'];
+  final supabase = Supabase.instance.client;
+
+  void sendDataToSupabase(String calcul,String result) async {
+
+    Random random = Random();
+    int id = random.nextInt(100000);
+    // Données à envoyer
+    Map<String, dynamic> data = {
+      'id': id,
+      'calcul': calcul,
+      'result': result,
+    };
+
+    // Table dans laquelle les données seront insérées
+    String tableName = 'history';
+    final response = await supabase.from(tableName).insert([data]).execute();
+  }
 
   void boutonPresse(String TextBouton) {
     setState(() {
@@ -49,6 +69,7 @@ class _CalculatriceEcranState extends State<CalculatriceEcran> {
 
           ContextModel cm=ContextModel();
           resultat="${exp.evaluate(EvaluationType.REAL, cm)}";
+          sendDataToSupabase(expression, resultat);
 
         }catch(e){
 
@@ -88,7 +109,7 @@ class _CalculatriceEcranState extends State<CalculatriceEcran> {
     }
     return double.tryParse(s) != null;
   }
-    // fonction pour naviguer entre page
+  // fonction pour naviguer entre page
   void navigateToPage(String page) {
     setState(() {
       selectedPage = page;
@@ -287,4 +308,3 @@ class _CalculatriceEcranState extends State<CalculatriceEcran> {
     );
   }
 }
-
